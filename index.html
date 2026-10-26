@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Abyssal Rift</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="game"></div>
+
+  <!-- ===== บนซ้าย: โปรไฟล์ ===== -->
+  <div class="profile frame">
+    <div class="avatar"><img id="avatar" alt=""></div>
+    <div class="pinfo">
+      <div class="plv">Lv. <b id="plv">1</b></div>
+      <div class="pname" id="pname">AbyssLord</div>
+      <div class="pexp"><div id="pexp"></div></div>
+      <div class="ppow"><span class="sw-ic">⚔</span><b id="ppow">0</b></div>
+    </div>
+  </div>
+
+  <!-- ===== บนกลาง: ทรัพยากร ===== -->
+  <div class="res" id="res"></div>
+
+  <!-- ===== บนขวา: ไอคอนระบบ ===== -->
+  <div class="topicons">
+    <button class="ticon" data-top="mail" title="จดหมาย">✉<i class="dot"></i></button>
+    <button class="ticon" data-top="news" title="ประกาศ">📢</button>
+    <button class="ticon" data-top="players" title="ผู้เล่นบนเซิร์ฟเวอร์">👥<i class="netdot" id="net"></i></button>
+    <button class="ticon" data-top="calendar" title="ปฏิทินกิจกรรม">📅</button>
+    <button class="ticon" data-top="menu" title="เมนู">☰</button>
+  </div>
+  <div class="menu frame" id="menu">
+    <button data-toggle="grid">▦ กริด <kbd>G</kbd></button>
+    <button data-toggle="zones">◩ โซน <kbd>Z</kbd></button>
+    <button data-toggle="path">➜ เส้นทางบอส</button>
+    <button data-toggle="boss">☠ แถบบอส (ตัวอย่าง)</button>
+    <button id="btn-town">⌂ ไปที่ Town Hall</button>
+    <button id="btn-gate">⛩ ไปที่ประตูเมือง</button>
+    <button id="btn-fit">⛶ ดูทั้งเกาะ</button>
+    <button id="btn-export">⇩ ส่งออก JSON</button>
+    <button id="btn-reset">↺ รีเซ็ตเมือง</button>
+  </div>
+
+  <!-- ===== แถบบอส + มินิแมพ ===== -->
+  <div class="bossbar" id="bossbar">
+    <div class="skull">☠</div>
+    <div class="bb-main">
+      <div class="bb-name"><span class="bb-lv">Lv. 50</span> Abyssal Drake <small>(ตัวอย่าง)</small></div>
+      <div class="bb-hp"><div id="bb-fill"></div></div>
+      <div class="bb-num" id="bb-num">8,420,521 / 12,000,000</div>
+    </div>
+    <div class="bb-x">x4</div>
+  </div>
+  <div class="minimap frame">
+    <canvas id="mm" width="240" height="160"></canvas>
+    <div class="mm-z">
+      <button id="zin">＋</button>
+      <button id="zout">－</button>
+    </div>
+  </div>
+
+  <!-- ===== ซ้าย: เมนูหลัก ===== -->
+  <nav class="leftnav">
+    <button class="nbtn" data-nav="build"><span class="ni">🔨</span><span>สร้าง</span></button>
+    <button class="nbtn" data-nav="hero"><span class="ni">🧝</span><span>ฮีโร่</span></button>
+    <button class="nbtn" data-nav="research"><span class="ni">⚗</span><span>วิจัย</span><i class="badge" id="bdg-research">!</i></button>
+    <button class="nbtn" data-nav="prod"><span class="ni">📦</span><span>ผลิต</span></button>
+    <button class="nbtn" data-nav="manage"><span class="ni">🏛</span><span>จัดการ</span></button>
+  </nav>
+
+  <!-- ===== ขวา: ภารกิจ / กิจกรรม ===== -->
+  <nav class="rightnav">
+    <button class="nbtn" data-nav="quest"><span class="ni">📜</span><span>ภารกิจ</span><i class="badge" id="bdg-quest">!</i></button>
+    <button class="nbtn" data-nav="event"><span class="ni">🎁</span><span>กิจกรรม</span><i class="badge" id="bdg-event">!</i></button>
+  </nav>
+
+  <aside class="legend frame" id="legend"></aside>
+  <section class="cell frame" id="cell"></section>
+
+  <!-- ===== ล่าง: แผนที่โลก + ปาร์ตี้ + สกิล ===== -->
+  <button class="worldmap" id="btn-world"><span class="wm-ic">🗺</span><span>แผนที่โลก</span></button>
+  <div class="partybar" id="partybar">
+    <div class="ptabs" id="ptabs"></div>
+    <div class="pcards frame" id="pcards"></div>
+  </div>
+  <div id="drawer" class="drawer frame"></div>
+  <div class="skills" id="skills"></div>
+
+  <div id="modebar" class="modebar frame"></div>
+  <div id="toasts" class="toasts"></div>
+  <div id="tip" class="tip"></div>
+  <div id="modal" class="modal"><div class="modal-box frame" id="modal-box"></div></div>
+
+  <div id="loading">
+    <div class="ld-box">
+      <div class="ld-logo">ABYSSAL RIFT</div>
+      <div id="login" class="login">
+        <div class="lg-mode" id="lg-mode"></div>
+        <button class="lg-btn" id="lg-continue" style="display:none"></button>
+        <button class="lg-btn gold" id="lg-guest">▶ เล่นแบบ Guest</button>
+        <button class="lg-link" id="lg-new" style="display:none">สร้าง Guest ใหม่ (เริ่มเมืองใหม่)</button>
+        <div class="lg-err" id="lg-err"></div>
+      </div>
+      <div class="ld-bar" id="ld-barwrap" style="display:none"><div id="ld-fill"></div></div>
+      <div class="ld-note" id="ld-note"></div>
+    </div>
+  </div>
+
+  <!-- Phaser 3.90.0 (ไฟล์อยู่ในโปรเจกต์ ไม่ต้องต่อเน็ต) -->
+  <script src="lib/phaser.min.js"></script>
+  <!-- engine (classic scripts — เปิดจากไฟล์ได้โดยไม่ต้องมี server) -->
+  <script src="js/config.js"></script>
+  <script src="assets/terrain/textures.js"></script>
+  <script src="assets/buildings/sprites.js"></script>
+  <script src="assets/buildings/townhall.js"></script>
+  <script src="assets/portal/portal.js"></script>
+  <script src="js/core.js"></script>
+  <script src="js/island.js"></script>
+  <script src="js/art.js"></script>
+  <script src="js/terrain.js"></script>
+  <script src="js/net.js"></script>
+  <script src="js/buildings.js"></script>
+  <script src="js/buildingArt.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/hud.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

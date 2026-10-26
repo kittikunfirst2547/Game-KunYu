@@ -1,0 +1,28 @@
+// Cloudflare Workers config — Abyssal Rift
+// "name" = ชื่อลิงก์: https://<name>.<บัญชีของคุณ>.workers.dev  (เปลี่ยนได้ ใช้ a-z 0-9 และ -)
+{
+	"name": "abyssal-rift",
+	"main": "worker/index.js",
+	"compatibility_date": "2026-06-01",
+	"assets": {
+		"directory": ".",
+		"binding": "ASSETS",
+		"run_worker_first": [
+			"/api/*"
+		]
+	},
+	// ฐานข้อมูล D1: deploy ครั้งแรก wrangler จะสร้างให้อัตโนมัติ (ไม่ต้องใส่ database_id)
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "abyssal-rift-db",
+			"database_id": "96257300-4706-41cb-a853-de6c0e27ba24"
+		}
+	],
+	"vars": {
+		"TZ_OFFSET_HOURS": "7"
+	},
+	"observability": {
+		"enabled": true
+	}
+}
